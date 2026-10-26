@@ -1,16 +1,46 @@
-# Boku no Natsuyasumi 2 — Adventure by the Sea
+# Boku no Natsuyasumi 2 — Native PC Port (early work) | PlayStation 2 Static Recompilation
 
-Mídia original em `D:\ISO\Boku no Natsuyasumi 2 - Adventure by the Sea (Japan) (T-En by Hilltop v1.2) (n).chd`, preservada (1.585.186.559 bytes).
+> [!WARNING]
+> This repository does **not** include the game, a disc image/ELF, game assets, a translation patch, generated game code or a precompiled executable.
+> You need your own PlayStation 2 disc. See [the full notice](#notice) at the end.
 
-Em 26/10/2026, o DVD do CHD v5 foi descompactado e os **926 arquivos, somando 3.177.992.698 bytes**, foram extraídos para `game_files/`. A imagem intermediária de 3.576.135.680 bytes conferiu com o SHA-1 de dados do cabeçalho CHD. Todos os arquivos extraídos foram comparados com seus extents e relidos para verificar SHA-256; ver `analysis/game-files-verification.json`.
+Early work on a port of the PlayStation 2 game *Boku no Natsuyasumi 2: Umi no Bouken-hen* (Japan, "Adventure by the Sea"), built through static recompilation of the Emotion Engine code with [PS2Recomp](https://github.com/ran-j/PS2Recomp). **This public repository is a work-in-progress source snapshot, not a ready-to-play game download or a self-contained build kit.** The game's MIPS code is translated locally from your own disc; no game executable or generated game code is distributed here.
 
-A plataforma foi confirmada pelos arquivos: `SYSTEM.CNF` contém `BOOT2 = cdrom0:\SCPS_150.26;1`, e `SCPS_150.26` é ELF32 little-endian MIPS, entrypoint `0x100008`. Há módulos IOP, dados, vídeos e áudio. O nome do CHD menciona tradução Hilltop v1.2; a versão e o idioma do patch ainda não foram validados.
+## Status
 
-A cópia temporária do CHD e a ISO intermediária foram removidas após a verificação. O CHD original continua disponível porque preserva a mídia completa e ainda não há runtime do Boku2 neste projeto. Não houve recompilação nem execução do jogo.
+- **Not playable yet.** The native executable builds, initializes graphics and audio, creates the game's threads and then stalls at `0x2338dc` after `ChangeThreadPriority`; no scene has been validated.
+- EE (R5900) code: 5,329 functions mapped with Ghidra and recompiled; the entry point the function map missed (`0x20a920`) was recovered, plus 791 gap functions.
+- A local CMake adaptation (`project/runtime_memory.cmake`) separates the game heap, the runtime arena, callback stacks and the 1 MiB main stack.
+- IOP and VU still run through interpreters in the runtime; this is not a fully native port.
 
-A conversão usou `chdman` 0.289, extraído do pacote oficial MAME com SHA-256 conferido contra o digest da release. A ferramenta e sua origem estão em `../third_party/chdman-0.289/`; veja a [documentação oficial de extração de CHD](https://docs.mamedev.org/tools/chdman.html#extractdvd).
+## What is in this repository
 
+- `scripts/` — game-file extraction and verification, Ghidra export scripts, generation, gap-function and SDK-handler generators, SDK tail-call routing, chunking, native build and smoke test.
+- `config/` — recompiler configuration (TOML). Ghidra CSV exports are not included.
+- `project/` — CMake project, `main.cpp` and runtime layout adaptations; generated and recovered sources are not included.
+- [NOTES.md](NOTES.md) and [CONTINUACAO.md](CONTINUACAO.md) — development log (in Portuguese).
 
-Em 26/10/2026 foi criado o projeto AOT com Ghidra R5900 local e PS2Recomp: 5.329 fun��es mapeadas, fontes gerados, compila��o nativa e inicializa��o de GPU/�udio. `generate.cmd` reproduz a gera��o; `build-native.cmd` compila; `Jogar-Boku2.cmd` usa `build-location.txt`. O build atual fica em `D:\CodexBuilds\native-ports\boku2`.
+The scripts expect the author's local workspace (`../third_party/PS2Recomp` and a local build directory).
 
-A entrada omitida em `0x20a920` foi recuperada do ELF, com nove endere�os de retomada. A adapta��o local `project/runtime_memory.cmake` separa o heap (fim `0x01e00000`), a arena do runtime, as pilhas de callbacks e a pilha principal de 1 MiB. N�o modifica os fontes compartilhados. O teste de 25 segundos ultrapassou o erro de pilha e criou threads do jogo, mas permaneceu travado em `0x2338dc`, ap�s `iChangeThreadPriority`, sem cena validada. N�o � um port jog�vel conclu�do. Evid�ncias: `analysis/runtime-smoke.json`, `runs/smoke/runtime.log`, `analysis/recovered-entry.json`.
+## Your game files
+
+Tested with the Japanese disc (`SCPS-15026`) carrying the Hilltop English translation patch v1.2; the patch has not been validated in the port.
+
+```text
+SCPS_150.26  ecdac5741e092099e08834ea16b785cdfd70bc750855caa6c4dd28fc689cb6b1  (tested, patched image)
+```
+
+Do not upload the disc image, extracted files, the patch, Ghidra databases, generated code or the built executable.
+
+## Credits and licenses
+
+- Port integration and tooling: [batatinhafcbatatinha-pixel](https://github.com/batatinhafcbatatinha-pixel).
+- [PS2Recomp](https://github.com/ran-j/PS2Recomp) by ran-j and contributors: recompiler, analyzer and runtime base.
+- [Ghidra](https://github.com/NationalSecurityAgency/ghidra) with the [ghidra-emotionengine-reloaded](https://github.com/chaoticgd/ghidra-emotionengine-reloaded) extension, and MAME's `chdman`, used locally.
+- Boku no Natsuyasumi 2, its code, trademarks and assets belong to Sony Interactive Entertainment, Millennium Kitchen and the respective rights holders; the English translation belongs to its authors. This project is not affiliated with or endorsed by them.
+
+---
+
+<a id="notice"></a>
+
+**⚠️ THIS PROJECT DOES NOT INCLUDE THE GAME, A DISC IMAGE/ELF, GAME ASSETS, GENERATED GAME CODE OR A PRECOMPILED GAME EXECUTABLE. YOU MUST PROVIDE YOUR OWN LAWFULLY OBTAINED GAME FILES AND HAVE THE RIGHTS REQUIRED FOR YOUR USE. THIS PROJECT DOES NOT AUTHORIZE COPYRIGHT INFRINGEMENT. ALL GAME RIGHTS BELONG TO THEIR RESPECTIVE OWNERS. ⚠️**
