@@ -1,0 +1,10 @@
+[general]
+input = "C:/Users/dudua/Documents/Codex/2026-10-09/install-rea-and-connect-it-to/work/boku2/game_files/SCPS_150.26"
+output = "C:/Users/dudua/Documents/Codex/2026-10-09/install-rea-and-connect-it-to/work/boku2/project/gap-functions"
+ghidra_output = "C:/Users/dudua/Documents/Codex/2026-10-09/install-rea-and-connect-it-to/work/boku2/config/gap-functions.csv"
+single_file_output = false
+patch_syscalls = false
+patch_cop0 = true
+patch_cache = true
+stubs = []
+skip = []
