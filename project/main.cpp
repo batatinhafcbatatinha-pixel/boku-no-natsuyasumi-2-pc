@@ -1,5 +1,5 @@
 #define main Boku2SharedMain
-#include "../../third_party/PS2Recomp/ps2xRuntime/src/main.cpp"
+#include PS2X_SHARED_MAIN_CPP // the PS2Recomp frontend (path set by project/CMakeLists.txt)
 #undef main
 #include "recovered/Boku2BootMain_0x20a920.cpp"
 struct Boku2TableEntry { uint32_t address; PS2Runtime::RecompiledFunction function; };
@@ -8,10 +8,16 @@ struct Boku2TableEntry { uint32_t address; PS2Runtime::RecompiledFunction functi
 extern const uint32_t g_ps2RecompiledFunctionTableBase;
 extern const uint32_t g_ps2RecompiledFunctionTableSlotCount;
 extern PS2Runtime::RecompiledFunction g_ps2RecompiledFunctionTable[];
+std::string ps2xDispatchTrail();
 static PS2Runtime::RecompiledFunction g_probeOriginal = nullptr;
 static void Boku2Probe(uint8_t* rdram, R5900Context* ctx, PS2Runtime* runtime) {
     static int n = 0;
-    if (n++ < 6) std::cerr << "[probe] pc=0x" << std::hex << ctx->pc << " ra=0x" << getRegU32(ctx, 31) << " a0=0x" << getRegU32(ctx, 4) << std::dec << std::endl;
+    static const char* raFilter = std::getenv("BOKU2_PROBE_RA");
+    if (raFilter && getRegU32(ctx, 31) != std::strtoul(raFilter, nullptr, 16)) { g_probeOriginal(rdram, ctx, runtime); return; }
+    ++n;
+    const bool show = n <= 6 || (n & (n - 1)) == 0;
+    if (show) std::cerr << "[probe] pc=0x" << std::hex << ctx->pc << " ra=0x" << getRegU32(ctx, 31) << " a0=0x" << getRegU32(ctx, 4) << " a1=0x" << getRegU32(ctx, 5) << " a2=0x" << getRegU32(ctx, 6) << " sp=0x" << getRegU32(ctx, 29) << std::dec << " trail=" << ps2xDispatchTrail() << std::endl;
+    if (const char* peek = std::getenv("BOKU2_PEEK"); show && peek) { const uint32_t a = std::strtoul(peek, nullptr, 16) & 0x1FFFFFCu; std::cerr << "[probe] peek 0x" << std::hex << a; for (int i = 0; i < 8; ++i) std::cerr << ' ' << *reinterpret_cast<const uint32_t*>(rdram + a + i * 4); std::cerr << std::dec << std::endl; }
     g_probeOriginal(rdram, ctx, runtime);
 }
 int main(int argc, char** argv) {

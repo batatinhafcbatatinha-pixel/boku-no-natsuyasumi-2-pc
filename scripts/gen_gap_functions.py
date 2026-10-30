@@ -36,6 +36,58 @@ for a in gaps:
     end = bounds[bisect.bisect_right(bounds, a)]
     rows.append((f'gap_{a:08x}', a, end))
 
+# Code right after a Ghidra function's end (past nop padding) that nobody claimed: function-pointer
+# targets such as 0x227790 (filled into a table at run time, so no data reference in the ELF).
+# Their ranges only end at the next known start; the ranges above stay as they were.
+elf = (root / 'game_files/SCPS_150.26').read_bytes()
+text_va, text_off = 0x100000, 0x1000
+
+
+def word(a):
+    return int.from_bytes(elf[text_off + a - text_va:text_off + a - text_va + 4], 'little')
+
+
+known = set(starts) | set(gaps)
+trailing = set()
+for _, e in ghidra:
+    a = e
+    while a < text_end and word(a) == 0:
+        a += 4
+    if a < text_end and a not in known and not covered(a):
+        trailing.add(a)
+# Gap ranges run to the next known start, so one can hold several functions (0x228008 sat inside
+# gap_00227fd8): code after every `jr ra` + delay slot outside Ghidra functions starts another one.
+for a in range(text_va, text_end, 4):
+    if word(a) == 0x03E00008 and not covered(a):
+        b = a + 8
+        while b < text_end and word(b) == 0:
+            b += 4
+        if b < text_end and b not in known and not covered(b):
+            trailing.add(b)
+# Tail calls end functions too: code after a `j target` + delay slot (0x1b6e70 followed one) outside Ghidra functions.
+for a in range(text_va, text_end, 4):
+    if word(a) >> 26 == 0x02 and not covered(a):
+        b = a + 8
+        while b < text_end and word(b) == 0:
+            b += 4
+        if b < text_end and b not in known and not covered(b):
+            trailing.add(b)
+# Virtual-table and callback pointers in the data that land on a function-looking start (prologue, bare `jr ra`,
+# or right after a `jr ra`/`j` + delay slot or nop padding) and are not a known start yet.
+data_start, data_end = text_end, 0x2A5AB8  # end of the loaded file image (filesz)
+for o in range(text_off + data_start - text_va, min(len(elf), text_off + data_end - text_va) - 3, 4):
+    t = int.from_bytes(elf[o:o + 4], 'little')
+    if not (text_va <= t < text_end) or t & 3 or t in known or t in trailing:
+        continue
+    w, prev2 = word(t), word(t - 8)
+    if ((w >> 16) == 0x27BD and w & 0x8000) or w == 0x03E00008 or word(t - 4) == 0 or prev2 == 0x03E00008 \
+            or prev2 >> 26 == 0x02:
+        trailing.add(t)
+all_bounds = sorted(set(bounds) | trailing)
+for a in sorted(trailing):
+    rows.append((f'gap_{a:08x}', a, all_bounds[bisect.bisect_right(all_bounds, a)]))
+rows.sort(key=lambda r: r[1])
+
 out_dir = root / 'project/gap-functions'
 csv_path = root / 'config/gap-functions.csv'
 with csv_path.open('w', newline='') as f:

@@ -30,7 +30,7 @@ started = time.monotonic()
 with (run / 'runtime.log').open('w', encoding='utf-8') as log:
     proc = subprocess.Popen(command, cwd=root, startupinfo=startup,
         stdout=log, stderr=subprocess.STDOUT,
-        env={**os.environ, 'PS2X_WINDOW_MODE': 'windowed'})
+        env={**os.environ, 'PS2X_CD_IMAGE': '', 'PS2X_WINDOW_MODE': 'windowed'})
     reason = 'exited'
     try:
         while proc.poll() is None:
