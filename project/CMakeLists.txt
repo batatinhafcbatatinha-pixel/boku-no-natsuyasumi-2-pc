@@ -51,7 +51,7 @@ endif()
 # Linux/other POSIX: FFmpeg from the system (pkg-config); raylib 5.5 fetched once unless
 # FETCHCONTENT_SOURCE_DIR_RAYLIB points at an existing checkout.
 set(PS2X_SPLIT_GAME_CODE ON CACHE BOOL "Generated code in ps2_game_code on every platform" FORCE)
-# PS2Recomp runtime: the third_party/PS2Recomp submodule (fork, branch native-ports) when checked out,
+# PS2Recomp runtime: the third_party/PS2Recomp submodule (fork, branch macos) when checked out,
 # otherwise the shared checkout next to the game folders (../third_party/PS2Recomp).
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/PS2Recomp/CMakeLists.txt")
     set(BOKU2_PS2RECOMP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/PS2Recomp")

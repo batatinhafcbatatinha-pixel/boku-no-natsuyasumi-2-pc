@@ -8,7 +8,8 @@ Early work on a port of the PlayStation 2 game *Boku no Natsuyasumi 2: Umi no Bo
 
 ## Status
 
-- **Not playable yet.** The native executable builds, initializes graphics and audio, creates the game's threads and then stalls at `0x2338dc` after `ChangeThreadPriority`; no scene has been validated.
+- The native executable boots to the title screen and the demo gameplay. It is not validated from start to finish.
+- Windows, [Linux](LINUX.md) and [macOS](MACOS.md) builds use the same sources. The macOS build is experimental and has not been run on a real Mac.
 - EE (R5900) code: 5,329 functions mapped with Ghidra and recompiled; the entry point the function map missed (`0x20a920`) was recovered, plus 791 gap functions.
 - A local CMake adaptation (`project/runtime_memory.cmake`) separates the game heap, the runtime arena, callback stacks and the 1 MiB main stack.
 - IOP and VU still run through interpreters in the runtime; this is not a fully native port.
