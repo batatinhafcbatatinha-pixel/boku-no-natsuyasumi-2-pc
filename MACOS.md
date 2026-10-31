@@ -17,7 +17,7 @@ run. The GS is the runtime's software rasterizer (`PS2X_GS=cpu`). `project/CMake
 | Software GS Gouraud tests on those two Mac runners | Pass |
 | PS2Recomp test suite on those two Mac runners | 459/461 (Intel) and 457/461 (arm64); the failures are EE kernel and VBlank tests (the set changes between runs) |
 | Whole game built for ARM64 with Clang, targeting Linux | Pass |
-| ARM64 game code run under `qemu-aarch64` on x86-64 Linux, software GS | No crash; reached the Sony logo after about 40 minutes; all 68 guest events in the x86-64 reference run matched |
+| ARM64 game code run under `qemu-aarch64` on x86-64 Linux, software GS | No crash; reached the Sony logo after about 40 minutes, and all 68 guest events in the x86-64 reference run matched. On the current runtime, a 20-minute run matched 41 of 41 events and stopped before the logo |
 | x86-64 Linux with these sources and the software GS | Title and demo gameplay render |
 | The game code built with Apple's SDK | **Not tested** (generated code is never uploaded, so CI cannot build it) |
 | Any run on a real Mac, including sound, controllers and the window | **Not tested** |
