@@ -88,7 +88,7 @@ endif()
 # Large resumable switches make whole-game optimizing compiles expensive.
 # Bootstrap native code without optimizer expansion; optimize after coverage
 # and dispatch integration stabilize. Other projects/runtime retain Release.
-option(BOKU2_OPTIMIZE_AOT "Optimize the large generated game-code library" OFF)
+option(BOKU2_OPTIMIZE_AOT "Optimize the large generated game-code library" ON)
 if(MSVC)
     target_link_options(ps2EntryRunner PRIVATE /STACK:16777216 /MAP)
     if(BOKU2_OPTIMIZE_AOT)

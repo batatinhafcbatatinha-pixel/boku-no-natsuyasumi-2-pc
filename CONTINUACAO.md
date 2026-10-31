@@ -1,3 +1,9 @@
+# Checkpoint — 31/10/2026 (Claude): passe de desempenho
+
+Runtime compartilhado: VU1 nativo com Q, P, FSAND e XGKICK exatos (oráculo `GOW_VU1N_VERIFY`), contabilidade do EE em lote, VIF1/VU1/GIF em thread própria (`PS2X_VIF_THREAD=0` desliga), logs e gatilhos de diagnóstico fora do caminho quente. `AOT otimizado` agora é o padrão do CMake. Blocos VU1: capturar com `GOW_VU1_CAPTURA`, gerar com `codwaw-ff/scripts/vu1n_gen.py` e configurar `-DPS2X_VU1N_DIR`.
+
+Boku2: demo em 40–60 fps (antes 20–30); IOP 9% (antes 24–50%).
+
 # Checkpoint — 31/10/2026 (Claude): rastro do personagem corrigido
 
 `sceGsSetDefClear` do runtime é um stub vazio; o `sceGsSetDefDBuffDc` do jogo o usa para preencher a limpeza da troca de buffer, então o Z nunca era limpo e o sprite de fundo falhava onde o personagem tinha passado. Solução: função em `config/sdk-handlers-exclude.txt` (roda o código do jogo). Demo sem rastro em todas as cenas (só modo demonstração, sem input).
