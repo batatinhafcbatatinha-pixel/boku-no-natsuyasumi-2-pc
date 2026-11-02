@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 BUILD = Path(os.environ.get('BOKU2_BUILD_ROOT', str(ROOT / 'build/native'))).resolve()
 GIB = 1024 ** 3
+BUDGET = 16 * GIB  # a full build with the generated game code
 
 
 def size():
@@ -16,8 +17,8 @@ def size():
 
 
 def guard():
-    if size() >= 2 * GIB:
-        raise RuntimeError('Native build reached its 2 GiB budget')
+    if size() >= BUDGET:
+        raise RuntimeError(f'Native build reached its {BUDGET // GIB} GiB budget')
 
 
 def run(args, log):
@@ -47,6 +48,7 @@ def main():
     if not prebuilt:
         subprocess.run([sys.executable, str(ROOT / 'scripts/check_build_space.py')], check=True)
     guard()
+    (ROOT / 'analysis').mkdir(exist_ok=True)
     BUILD.mkdir(parents=True, exist_ok=True)
     temporary = BUILD / 'compiler-temp'
     temporary.mkdir(exist_ok=True)

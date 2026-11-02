@@ -8,8 +8,10 @@ import re
 import tomllib
 from pathlib import Path
 
+from local_tools import runtime_file
+
 root = Path(__file__).resolve().parents[1]
-call_list = (root.parent / 'third_party/PS2Recomp/ps2xRuntime/include/ps2_call_list.h').read_text()
+call_list = runtime_file('ps2xRuntime/include/ps2_call_list.h').read_text()
 
 
 def names(macro):

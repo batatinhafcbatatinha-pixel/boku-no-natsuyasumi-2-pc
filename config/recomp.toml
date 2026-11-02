@@ -1,8 +1,8 @@
 # Boku2-specific FunctionManager boundaries; no synthetic label functions.
 [general]
-input = "C:/Users/dudua/Documents/Codex/2026-10-09/install-rea-and-connect-it-to/work/boku2/game_files/SCPS_150.26"
-output = "C:/Users/dudua/Documents/Codex/2026-10-09/install-rea-and-connect-it-to/work/boku2/project/runner"
-ghidra_output = "C:/Users/dudua/Documents/Codex/2026-10-09/install-rea-and-connect-it-to/work/boku2/config/ghidra-functions-only.csv"
+input = "game_files/SCPS_150.26"
+output = "project/runner"
+ghidra_output = "config/ghidra-functions-only.csv"
 single_file_output = false
 low_memory_mode = true
 output_worker_threads = 1

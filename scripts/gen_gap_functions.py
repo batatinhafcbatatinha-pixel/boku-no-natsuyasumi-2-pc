@@ -12,6 +12,8 @@ import re
 import subprocess
 from pathlib import Path
 
+from local_tools import recompiler
+
 root = Path(__file__).resolve().parents[1]
 text_end = 0x25225C
 ghidra = sorted((int(r['Start'], 16), int(r['End'], 16))
@@ -97,14 +99,15 @@ with csv_path.open('w', newline='') as f:
     w.writerow(['entry', '0x00100008', '0x001000B4', 172])
     for name, a, e in rows:
         w.writerow([name, f'0x{a:08X}', f'0x{e:08X}', e - a])
-q = lambda p: json.dumps(str(p).replace('\\', '/'))
+q = lambda p: json.dumps(p.relative_to(root).as_posix())  # the tool runs from the repository root
 toml_path = root / 'config/gap-functions.toml'
 toml_path.write_text('\n'.join([
     '[general]', f'input = {q(root / "game_files/SCPS_150.26")}', f'output = {q(out_dir)}',
     f'ghidra_output = {q(csv_path)}', 'single_file_output = false', 'patch_syscalls = false',
     'patch_cop0 = true', 'patch_cache = true', 'stubs = []', 'skip = []']) + '\n')
 
-tool = Path(os.environ.get('PS2_RECOMP_EXE', str(root.parent / 'codwaw-ff/build/ps2recomp/ps2xRecomp/ps2_recomp.exe')))
+tool = recompiler()
+(root / 'analysis').mkdir(exist_ok=True)
 with (root / 'analysis/gap-functions.log').open('w') as log:
     subprocess.run([str(tool), str(toml_path)], cwd=root, stdout=log, stderr=subprocess.STDOUT, check=True)
 

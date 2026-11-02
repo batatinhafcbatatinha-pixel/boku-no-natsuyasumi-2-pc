@@ -7,6 +7,8 @@ import re
 import subprocess
 import sys
 
+from local_tools import recompiler
+
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED = 'ecdac5741e092099e08834ea16b785cdfd70bc750855caa6c4dd28fc689cb6b1'
 
@@ -16,7 +18,8 @@ def main():
     args = parser.parse_args()
     if hashlib.sha256((ROOT / 'game_files/SCPS_150.26').read_bytes()).hexdigest() != EXPECTED:
         raise RuntimeError('Unexpected Boku2 ELF identity')
-    compiler = ROOT.parent / 'codwaw-ff/build/ps2recomp/ps2xRecomp/ps2_recomp.exe'
+    compiler = recompiler()
+    (ROOT / 'analysis').mkdir(exist_ok=True)
     configs = ['recovered'] if args.recovered_only else ['recomp', 'recovered']
     for name in configs:
         with (ROOT / f'analysis/{name}-generation.log').open('w') as log:

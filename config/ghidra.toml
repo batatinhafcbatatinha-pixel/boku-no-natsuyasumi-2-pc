@@ -7,9 +7,9 @@
 # - no SCE symbol database is used by this Ghidra script
 
 [general]
-input = "C:/Users/dudua/Documents/Codex/2026-10-09/install-rea-and-connect-it-to/work/boku2/game_files/SCPS_150.26"
-output = "C:\\Users\\dudua\\Documents\\Codex\\2026-10-09\\install-rea-and-connect-it-to\\work\\boku2\\config\\output"
-ghidra_output = "C:\\Users\\dudua\\Documents\\Codex\\2026-10-09\\install-rea-and-connect-it-to\\work\\boku2\\config\\ghidra-all-labels.csv"
+input = "game_files/SCPS_150.26"
+output = "config/output"
+ghidra_output = "config/ghidra-all-labels.csv"
 single_file_output = false
 patch_syscalls = false
 patch_cop0 = true
