@@ -4,7 +4,7 @@
 > This repository does **not** include the game, a disc image/ELF, game assets, a translation patch, generated game code or a precompiled executable.
 > You need your own PlayStation 2 disc. See [the full notice](#notice) at the end.
 
-Early work on a port of the PlayStation 2 game *Boku no Natsuyasumi 2: Umi no Bouken-hen* (Japan, "Adventure by the Sea"), built through static recompilation of the Emotion Engine code with [PS2Recomp](https://github.com/ran-j/PS2Recomp). **This public repository is a work-in-progress source snapshot, not a ready-to-play game download or a self-contained build kit.** The game's MIPS code is translated locally from your own disc; no game executable or generated game code is distributed here.
+Early work on a port of the PlayStation 2 game *Boku no Natsuyasumi 2: Umi no Bouken-hen* (Japan, "Adventure by the Sea"), built through static recompilation of the Emotion Engine code with [PS2Recomp](https://github.com/ran-j/PS2Recomp). **This public repository is a work-in-progress source kit, not a ready-to-play game download.** The game's MIPS code is translated locally from your own disc; no game executable or generated game code is distributed here.
 
 ## Status
 
@@ -22,7 +22,23 @@ Early work on a port of the PlayStation 2 game *Boku no Natsuyasumi 2: Umi no Bo
 - `project/` — CMake project, `main.cpp` and runtime layout adaptations; generated and recovered sources are not included.
 - [NOTES.md](NOTES.md) — development log (in Portuguese).
 
-The scripts expect the author's local workspace (`../third_party/PS2Recomp` and a local build directory). On Windows the CMake project also takes raylib and FFmpeg from a sibling `codwaw-ff/build/game` folder, with downloads turned off, so a fresh clone stops at configure time. There is no one-step build yet: you also need Ghidra exports of your own disc to generate the game code.
+## Build on Windows
+
+Requirements: Git, Python 3.11+, Visual Studio 2022 or its Build Tools (C++ workload) with CMake and Ninja, [Ghidra](https://github.com/NationalSecurityAgency/ghidra) with the [ghidra-emotionengine-reloaded](https://github.com/chaoticgd/ghidra-emotionengine-reloaded) extension, and your own disc. Keep about 10 GB free. Raylib, FFmpeg, `SDL3.dll` and `gamecontrollerdb.txt` are downloaded by the build.
+
+```powershell
+git clone --recurse-submodules <this repository>
+cd <the cloned folder>
+.\Instalar-Arquivos.cmd           # your disc into game_files
+$env:GHIDRA = "C:\path\to\ghidra"
+.\ghidra-export.cmd               # function lists of your own executable
+.\build-recompiler.cmd            # PS2Recomp tools from the submodule
+python scripts\prepare_game_code.py
+.\build-native.cmd                # two compile jobs by default; 6 ran out of memory on a 16 GB PC
+.\Jogar-Boku2.cmd
+```
+
+Generated code, Ghidra exports and the executable stay on your PC: do not upload them.
 
 ## Your game files
 
