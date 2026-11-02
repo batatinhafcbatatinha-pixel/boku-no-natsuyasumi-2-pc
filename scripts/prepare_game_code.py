@@ -2,7 +2,7 @@
 import subprocess
 import sys
 
-from local_tools import ROOT, analyzer, runtime_file  # noqa: F401
+from local_tools import ROOT, analyzer
 
 (ROOT / 'analysis').mkdir(exist_ok=True)
 with (ROOT / 'analysis/analyzer.log').open('w') as log:
