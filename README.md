@@ -45,3 +45,11 @@ Do not upload the disc image, extracted files, the patch, Ghidra databases, gene
 <a id="notice"></a>
 
 **⚠️ THIS PROJECT DOES NOT INCLUDE THE GAME, A DISC IMAGE/ELF, GAME ASSETS, GENERATED GAME CODE OR A PRECOMPILED GAME EXECUTABLE. YOU MUST PROVIDE YOUR OWN LAWFULLY OBTAINED GAME FILES AND HAVE THE RIGHTS REQUIRED FOR YOUR USE. THIS PROJECT DOES NOT AUTHORIZE COPYRIGHT INFRINGEMENT. ALL GAME RIGHTS BELONG TO THEIR RESPECTIVE OWNERS. ⚠️**
+
+## Controls
+
+Xbox pads and every pad SDL knows work in the game and in the PC settings menu (F1): DualShock 3/4, DualSense, Switch pads, USB adapters for PS2 and original Xbox pads. The build downloads `gamecontrollerdb.txt` (SDL_GameControllerDB) and, on Windows, `SDL3.dll` (both zlib license) next to the executable. Without them the game behaves as before, with the pads raylib sees. Linux and macOS use the mapping database only. No PlayStation pad or adapter has been tried on real hardware yet.
+
+Keyboard and mouse: W A S D or the arrows move, Space, C or the left button confirm (Circle), X, Esc, Backspace or the right button cancel (Cross), Z or the middle button is Square, V is Triangle, Q / E are L1 / R1, Shift is L2 / R2, Enter is Start, Tab is Select, F1 opens the PC settings. The mouse only moves the right stick if **Mouse look** is turned on in F1, which also has a **Mouse sensitivity** slider, because the game has no such option.
+
+With `SDL3.dll` (Windows) the game also vibrates the pad; **Controller vibration** in F1 turns that off.
