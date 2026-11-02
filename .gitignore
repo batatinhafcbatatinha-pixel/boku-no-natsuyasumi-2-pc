@@ -52,3 +52,6 @@ game-install-report.json
 # Shared PS2Recomp runtime (fork, submodule)
 !/third_party/
 !/third_party/PS2Recomp
+
+# Notes for AI agents stay local
+/CONTINUACAO.md
