@@ -29,13 +29,13 @@ Requirements: Git, Python 3.11+, Visual Studio 2022 or its Build Tools (C++ work
 ```powershell
 git clone --recurse-submodules <this repository>
 cd <the cloned folder>
-.\Instalar-Arquivos.cmd           # your disc into game_files
+.\Install-Files.cmd           # your disc into game_files
 $env:GHIDRA = "C:\path\to\ghidra"
 .\ghidra-export.cmd               # function lists of your own executable
 .\build-recompiler.cmd            # PS2Recomp tools from the submodule
 python scripts\prepare_game_code.py
 .\build-native.cmd                # two compile jobs by default; 6 ran out of memory on a 16 GB PC
-.\Jogar-Boku2.cmd
+.\Play-Boku2.cmd
 ```
 
 Generated code, Ghidra exports and the executable stay on your PC: do not upload them.
