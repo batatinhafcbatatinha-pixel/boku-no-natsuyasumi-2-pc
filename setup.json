@@ -20,7 +20,8 @@
         "/c",
         "ghidra-export.cmd"
       ],
-      "done_if": "config/ghidra-functions-only.csv"
+      "done_if": "config/ghidra-functions-only.csv",
+      "prepare": true
     },
     {
       "name": "Build the PS2Recomp tools",
@@ -29,7 +30,8 @@
         "/c",
         "build-recompiler.cmd"
       ],
-      "done_if": "build/recompiler/ps2xRecomp/ps2_recomp.exe"
+      "done_if": "build/recompiler/ps2xRecomp/ps2_recomp.exe",
+      "prepare": true
     },
     {
       "name": "Translate the game code",
@@ -37,7 +39,8 @@
         "{python}",
         "scripts/prepare_game_code.py"
       ],
-      "done_if": "project/sdk-handlers.inc"
+      "done_if": "project/sdk-handlers.inc",
+      "prepare": true
     },
     {
       "name": "Compile",
