@@ -1,0 +1,64 @@
+{
+  "game": "Boku no Natsuyasumi 2",
+  "disc": "PlayStation 2, Japan (SCPS-15026)",
+  "play": "Play-Boku2.cmd",
+  "disk_gb": 25,
+  "download_gb": 1,
+  "minutes": "60-180",
+  "tools": [
+    "cmake",
+    "ninja",
+    "ghidra"
+  ],
+  "gb_per_job": 4,
+  "max_jobs": 0,
+  "steps": [
+    {
+      "name": "Find the functions of your game executable (Ghidra)",
+      "run": [
+        "cmd",
+        "/c",
+        "ghidra-export.cmd"
+      ],
+      "done_if": "config/ghidra-functions-only.csv"
+    },
+    {
+      "name": "Build the PS2Recomp tools",
+      "run": [
+        "cmd",
+        "/c",
+        "build-recompiler.cmd"
+      ],
+      "done_if": "build/recompiler/ps2xRecomp/ps2_recomp.exe"
+    },
+    {
+      "name": "Translate the game code",
+      "run": [
+        "{python}",
+        "scripts/prepare_game_code.py"
+      ],
+      "done_if": "project/sdk-handlers.inc"
+    },
+    {
+      "name": "Compile",
+      "run": [
+        "cmd",
+        "/c",
+        "build-native.cmd",
+        "--jobs",
+        "{jobs}"
+      ],
+      "retry_if": "build/native/build.ninja"
+    }
+  ],
+  "submodules": {
+    "third_party/PS2Recomp": {
+      "url": "https://github.com/batatinhafcbatatinha-pixel/PS2Recomp.git",
+      "commit": "780c05f29d272167ebf9bffc250bb5f515baeec8"
+    },
+    "tools/port-installer": {
+      "url": "https://github.com/batatinhafcbatatinha-pixel/port-installer.git",
+      "commit": "36e62c6a559002c7ad239422e1c1a469d9eed616"
+    }
+  }
+}
